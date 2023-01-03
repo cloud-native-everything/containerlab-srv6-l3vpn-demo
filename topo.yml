@@ -1,0 +1,215 @@
+name: srv6-demo
+
+# topology based on 15 nodes used for the SReX demo on MPLS technologies
+# same set-up as referred to in the presentation
+# common SR chassis type: SR-1s
+
+mgmt:
+  network: net3         # management network name
+  ipv4_subnet: 172.100.20.0/24       # ipv4 range
+
+# based on SROS 21.10R2
+topology:
+  defaults:
+    kind: vr-sros
+  kinds:
+    vr-sros:
+      image: vr-sros:22.5.R2
+      license: license-sros22.txt
+      config:
+        vars:
+          isis_iid: [1]
+  nodes:
+# main 6 nodes
+    R1:      
+      kind: vr-sros
+      mgmt_ipv4: 172.100.20.9
+      config:
+        vars:
+          clab_system_ip: 192.0.2.1/32
+          ipv4_sid_label: 14001
+    R2:
+      kind: vr-sros
+      mgmt_ipv4: 172.100.20.2
+      config:
+        vars:
+          clab_system_ip: 192.0.2.2/32
+          ipv4_sid_label: 14002
+    R3:
+      kind: vr-sros
+      mgmt_ipv4: 172.100.20.3
+      config:
+        vars:
+          clab_system_ip: 192.0.2.3/32
+          ipv4_sid_label: 14003
+    R4:
+      kind: vr-sros
+      mgmt_ipv4: 172.100.20.4
+      config:
+        vars:
+          clab_system_ip: 192.0.2.4/32
+          ipv4_sid_label: 14004
+    R5:
+      kind: vr-sros
+      mgmt_ipv4: 172.100.20.5
+      config:
+        vars:
+          clab_system_ip: 192.0.2.5/32
+          ipv4_sid_label: 14005
+    R6:
+      kind: vr-sros
+      mgmt_ipv4: 172.100.20.6
+      config:
+        vars:
+          clab_system_ip: 192.0.2.6/32
+          ipv4_sid_label: 14006
+# area 1 - Core
+    R11:
+      kind: vr-sros
+      mgmt_ipv4: 172.100.20.11
+      config:
+        vars:
+          clab_system_ip: 192.0.2.11/32
+          ipv4_sid_label: 14011
+    R12:
+      kind: vr-sros
+      mgmt_ipv4: 172.100.20.12
+      config:
+        vars:
+          clab_system_ip: 192.0.2.12/32
+          ipv4_sid_label: 14012    
+# area 2
+    R21:
+      kind: vr-sros
+      mgmt_ipv4: 172.100.20.21
+      config:
+        vars:
+          clab_system_ip: 192.0.2.21/32
+          ipv4_sid_label: 14021
+    R22:
+      kind: vr-sros
+      mgmt_ipv4: 172.100.20.22
+      config:
+        vars:
+          clab_system_ip: 192.0.2.12/32
+          ipv4_sid_label: 14022    
+
+# area 3
+    R31:
+      kind: vr-sros
+      mgmt_ipv4: 172.100.20.31
+      config:
+        vars:
+          clab_system_ip: 192.0.2.31/32
+          ipv4_sid_label: 14031
+    R32:
+      kind: vr-sros
+      mgmt_ipv4: 172.100.20.32
+      config:
+        vars:
+          clab_system_ip: 192.0.2.32/32
+          ipv4_sid_label: 14032       
+
+# Nodes for testing
+    origin1:
+      kind: linux
+      mgmt_ipv4: 172.100.20.101
+      image: alpine:latest
+    destination1:
+      mgmt_ipv4: 172.100.20.111
+      kind: linux
+      image: alpine:latest  
+
+# bridge to VSR-NRC
+    VSR-NRC:
+      kind: bridge
+  
+  # bridge for VPN access to R1
+    VPN-BR1-R1:
+      kind: bridge
+
+  # bridge for VPN access to R6
+    VPN-BR6-R6:
+      kind: bridge
+
+  # bridge for TWAMP-LINK-R2-R4
+    R2-R4:
+      kind: bridge
+
+  # bridge for TWAMP-LINK-R3-R5
+    R3-R5:     
+      kind: bridge
+
+  links:
+  # VSR-NRC links:
+    - endpoints: ["VSR-NRC:veth2", "R2:eth4"]
+    - endpoints: ["VSR-NRC:veth3", "R4:eth4"]
+
+  # VPN-BR1_R1 links:
+    - endpoints: ["origin1:e1", "R1:eth3"]
+  
+  # VPN-BR6_R6 links:
+    - endpoints: ["destination1:e1", "R6:eth3"]
+    
+    # Area 1 connections
+    - endpoints: ["R1:eth2", "R11:eth2"]
+      vars:
+        port: [1/1/c2/1, 1/1/c2/1]
+    - endpoints: ["R1:eth1", "R12:eth1"]
+      vars:
+        port: [1/1/c1/1, 1/1/c1/1]
+    - endpoints: ["R11:eth1", "R2:eth1"]
+      vars:
+        port: [1/1/c1/1, 1/1/c1/1]
+    - endpoints: ["R11:eth3", "R12:eth4"]
+      vars:
+        port: [1/1/c3/1, 1/1/c4/1]
+    - endpoints: ["R12:eth2", "R3:eth1"]
+      vars:
+        port: [1/1/c2/1, 1/1/c1/1]
+
+    # inter ABR links
+    - endpoints: ["R2:eth3", "R3:eth3"]
+      vars:
+        port: [1/1/c3/1, 1/1/c3/1]
+    - endpoints: ["R4:eth3", "R5:eth3"]
+      vars:
+        port: [1/1/c3/1, 1/1/c3/1]
+
+    # Core area
+    - endpoints: ["R2:eth2", "R21:eth1"]
+      vars:
+        port: [1/1/c2/1, 1/1/c1/1]
+    - endpoints: ["R3:eth2", "R22:eth1"]
+      vars:
+        port: [1/1/c2/1, 1/1/c1/1]
+    - endpoints: ["R5:eth2", "R22:eth2"]
+      vars:
+        port: [1/1/c2/1, 1/1/c2/1]
+    - endpoints: ["R4:eth2", "R21:eth3"]
+      vars:
+        port: [1/1/c2/1, 1/1/c3/1]
+    - endpoints: ["R21:eth4", "R22:eth4"]
+      vars:
+        port: [1/1/c4/1, 1/1/c4/1]
+    - endpoints: ["R3:eth5", "R3-R5:eth1"]
+    - endpoints: ["R5:eth5", "R3-R5:eth2"]
+    - endpoints: ["R2:eth5", "R2-R4:eth3"]  
+    - endpoints: ["R4:eth5", "R2-R4:eth4"]
+
+    # area-3
+    - endpoints: ["R4:eth1", "R31:eth1"]
+      vars:
+        port: [1/1/c1/1, 1/1/c1/1]
+    - endpoints: ["R5:eth1", "R32:eth1"]
+      vars:
+        port: [1/1/c1/1, 1/1/c1/1]
+    - endpoints: ["R6:eth2", "R31:eth2"]
+      vars:
+        port: [1/1/c2/1, 1/1/c2/1]
+    - endpoints: ["R31:eth4", "R32:eth4"]
+      vars:
+        port: [1/1/c4/1, 1/1/c4/1]
+    - endpoints: ["R32:eth3", "R6:eth1"]
+      vars:
+        port: [1/1/c3/1, 1/1/c1/1]

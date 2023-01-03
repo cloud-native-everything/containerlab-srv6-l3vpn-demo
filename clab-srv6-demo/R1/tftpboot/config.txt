@@ -1,0 +1,1377 @@
+# TiMOS-B-22.5.R2 both/x86_64 Nokia 7750 SR Copyright (c) 2000-2022 Nokia.
+# All rights reserved. All use subject to applicable license agreements.
+# Built on Wed Jun 22 14:38:17 PDT 2022 by builder in /builds/c/225B/R2/panos/main/sros
+# Configuration format version 22.5 revision 0
+
+# Generated 2022-12-12T22:42:30.1Z by admin from 172.31.255.29
+# Commit ID 6
+#   Committed 2022-12-12T22:42:30.0Z by admin (MD-CLI) from 172.31.255.29
+
+configure {
+    apply-groups ["baseport"]
+    groups {
+        group "baseport" {
+            port "<.*\/[0-9]+>" {
+                ethernet {
+                    mode hybrid
+                    encap-type dot1q
+                    lldp {
+                        dest-mac nearest-bridge {
+                            notification true
+                            receive true
+                            transmit true
+                            tx-tlvs {
+                                sys-name true
+                                sys-cap true
+                            }
+                            tx-mgmt-address system {
+                                admin-state enable
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    bfd {
+        bfd-template "sBFD-Template" {
+            receive-interval 5000
+            transmit-interval 5000
+            type cpm-np
+        }
+        seamless-bfd {
+            reflector "sBFD-Reflector" {
+                admin-state enable
+                discriminator 524288
+            }
+        }
+    }
+    card 1 {
+        card-type iom-1
+        mda 1 {
+            mda-type me12-100gb-qsfp28
+            xconnect {
+                mac 1 {
+                    loopback 1 {
+                    }
+                }
+            }
+        }
+        mda 2 {
+        }
+        fp 1 {
+        }
+    }
+    chassis router chassis-number 1 {
+    }
+    fwd-path-ext {
+        fpe 1 {
+            path {
+                pxc 1
+            }
+            application {
+                srv6 {
+                    type origination
+                }
+            }
+        }
+        fpe 2 {
+            path {
+                pxc 2
+            }
+            application {
+                srv6 {
+                    type termination
+                }
+            }
+        }
+    }
+    log {
+        filter "1001" {
+            named-entry "10" {
+                description "Collect only events of major severity or higher"
+                action forward
+                match {
+                    severity {
+                        gte major
+                    }
+                }
+            }
+        }
+        filter "1500" {
+            description "Netconf config/create/cli log filter"
+            named-entry "1" {
+                description "To drop system tmnxConfigModify"
+                action drop
+                match {
+                    application {
+                        eq system
+                    }
+                    event {
+                        eq 2006
+                    }
+                }
+            }
+            named-entry "2" {
+                description "To drop system tmnxConfigCreate"
+                action drop
+                match {
+                    application {
+                        eq system
+                    }
+                    event {
+                        eq 2007
+                    }
+                }
+            }
+            named-entry "3" {
+                description "To drop system tmnxStateChange"
+                action drop
+                match {
+                    application {
+                        eq system
+                    }
+                    event {
+                        eq 2009
+                    }
+                }
+            }
+            named-entry "4" {
+                description "To drop security cli_user_login"
+                action drop
+                match {
+                    application {
+                        eq security
+                    }
+                    event {
+                        eq 2001
+                    }
+                }
+            }
+            named-entry "5" {
+                description "To drop security cli_user_logout"
+                action drop
+                match {
+                    application {
+                        eq security
+                    }
+                    event {
+                        eq 2002
+                    }
+                }
+            }
+            named-entry "6" {
+                description "To drop user netconf_user_login"
+                action drop
+                match {
+                    application {
+                        eq user
+                    }
+                    event {
+                        eq 2018
+                    }
+                }
+            }
+            named-entry "7" {
+                description "To drop user netconf_user_logout"
+                action drop
+                match {
+                    application {
+                        eq user
+                    }
+                    event {
+                        eq 2019
+                    }
+                }
+            }
+            named-entry "8" {
+                description "To drop security netconf_user_login"
+                action drop
+                match {
+                    application {
+                        eq security
+                    }
+                    event {
+                        eq 2121
+                    }
+                }
+            }
+            named-entry "9" {
+                description "To drop security netconf_user_logout"
+                action drop
+                match {
+                    application {
+                        eq security
+                    }
+                    event {
+                        eq 2122
+                    }
+                }
+            }
+            named-entry "10" {
+                description "To drop system ssiSaveConfigSucceeded"
+                action drop
+                match {
+                    application {
+                        eq system
+                    }
+                    event {
+                        eq 2002
+                    }
+                }
+            }
+            named-entry "11" {
+                description "To drop user cli_config_io"
+                action drop
+                match {
+                    application {
+                        eq user
+                    }
+                    event {
+                        eq 2011
+                    }
+                }
+            }
+            named-entry "19" {
+                description "To drop user grpc_user_login notification"
+                action drop
+                match {
+                    application {
+                        eq user
+                    }
+                    event {
+                        eq 2014
+                    }
+                }
+            }
+            named-entry "20" {
+                description "To drop user grpc_user_logout notification"
+                action drop
+                match {
+                    application {
+                        eq user
+                    }
+                    event {
+                        eq 2015
+                    }
+                }
+            }
+            named-entry "21" {
+                description "To drop security grpc_user_login notification"
+                action drop
+                match {
+                    application {
+                        eq security
+                    }
+                    event {
+                        eq 2117
+                    }
+                }
+            }
+            named-entry "22" {
+                description "To drop security grpc_user_logout notification"
+                action drop
+                match {
+                    application {
+                        eq security
+                    }
+                    event {
+                        eq 2118
+                    }
+                }
+            }
+            named-entry "34" {
+                description "To drop ISIS tmnxIsisCircMtuTooLow notification"
+                action drop
+                match {
+                    application {
+                        eq isis
+                    }
+                    event {
+                        eq 2064
+                    }
+                }
+            }
+        }
+        log-id "100" {
+            description "Default Serious Errors Log"
+            filter "1001"
+            source {
+                main true
+            }
+            destination {
+                memory {
+                    max-entries 500
+                }
+            }
+        }
+        log-id "66" {
+            admin-state enable
+            source {
+                debug true
+            }
+            destination {
+                cli {
+                }
+            }
+        }
+        log-id "96" {
+            admin-state enable
+            description "Log to filter out unwanted Netconf logs"
+            netconf-stream "nsp-netconf-stream"
+            filter "1500"
+            source {
+                main true
+                security true
+            }
+            destination {
+                netconf {
+                    max-entries 500
+                }
+            }
+        }
+        log-id "97" {
+            admin-state enable
+            source {
+                main true
+            }
+            destination {
+                snmp {
+                    max-entries 1024
+                }
+            }
+        }
+        log-id "99" {
+            description "Default System Log"
+            source {
+                main true
+            }
+            destination {
+                memory {
+                    max-entries 500
+                }
+            }
+        }
+        snmp-trap-group "97" {
+            trap-target "10_0_0_108" {
+                address 10.0.0.108
+                port 162
+                version snmpv2c
+                notify-community "private"
+            }
+        }
+    }
+    policy-options {
+        community "vrf4-export" {
+            member "target:64500:4" { }
+        }
+        community "vrf4-import" {
+            member "target:64500:4" { }
+        }
+        prefix-list "vrf1004-prefixes" {
+            prefix 10.1.4.0/24 type exact {
+            }
+        }
+        prefix-list "vrf1004-prefixes-ipv6" {
+            prefix 2001:db8:1:400::/56 type exact {
+            }
+        }
+        policy-statement "RFC8212-allow-eBGP-import" {
+            description "RFC8212-allow-eBGP-import"
+            default-action {
+                action-type accept
+            }
+        }
+        policy-statement "vrf1004-ebgp-export" {
+            entry 10 {
+                from {
+                    prefix-list ["vrf1004-prefixes"]
+                }
+                to {
+                    protocol {
+                        name [bgp]
+                    }
+                }
+                action {
+                    action-type accept
+                    origin igp
+                }
+            }
+        }
+        policy-statement "vrf1004-ebgp-export-ipv6" {
+            entry 10 {
+                from {
+                    prefix-list ["vrf1004-prefixes-ipv6"]
+                }
+                to {
+                    protocol {
+                        name [bgp]
+                    }
+                }
+                action {
+                    action-type accept
+                    origin igp
+                }
+            }
+        }
+        policy-statement "vrf4-ebgp-export" {
+            entry 10 {
+                from {
+                    protocol {
+                        name [bgp-vpn]
+                    }
+                }
+                to {
+                    protocol {
+                        name [bgp]
+                    }
+                }
+                action {
+                    action-type accept
+                }
+            }
+        }
+        policy-statement "vrf4-export" {
+            entry 10 {
+                from {
+                    protocol {
+                        name [bgp]
+                    }
+                }
+                to {
+                    protocol {
+                        name [bgp-vpn]
+                    }
+                }
+                action {
+                    action-type accept
+                    community {
+                        add ["vrf4-export"]
+                    }
+                }
+            }
+        }
+        policy-statement "vrf4-import" {
+            entry 10 {
+                from {
+                    community {
+                        name "vrf4-import"
+                    }
+                }
+                action {
+                    action-type accept
+                }
+            }
+            default-action {
+                action-type reject
+            }
+        }
+    }
+    port pxc-1.a {
+        admin-state enable
+    }
+    port pxc-1.b {
+        admin-state enable
+    }
+    port pxc-2.a {
+        admin-state enable
+    }
+    port pxc-2.b {
+        admin-state enable
+    }
+    port pxc-3.a {
+        admin-state enable
+        ethernet {
+            mode hybrid
+            encap-type dot1q
+        }
+    }
+    port pxc-3.b {
+        admin-state enable
+        ethernet {
+            mode hybrid
+            encap-type dot1q
+        }
+    }
+    port 1/1/c1 {
+        admin-state enable
+        connector {
+            breakout c1-10g
+        }
+    }
+    port 1/1/c1/1 {
+        admin-state enable
+    }
+    port 1/1/c2 {
+        admin-state enable
+        connector {
+            breakout c1-10g
+        }
+    }
+    port 1/1/c2/1 {
+        admin-state enable
+    }
+    port 1/1/c3 {
+        admin-state enable
+        connector {
+            breakout c1-10g
+        }
+    }
+    port 1/1/c3/1 {
+        admin-state enable
+    }
+    port 1/1/c4 {
+    }
+    port 1/1/c5 {
+    }
+    port 1/1/c6 {
+    }
+    port 1/1/c7 {
+    }
+    port 1/1/c8 {
+    }
+    port 1/1/c9 {
+    }
+    port 1/1/c10 {
+    }
+    port 1/1/c11 {
+    }
+    port 1/1/c12 {
+    }
+    port 1/1/m1/1 {
+        admin-state enable
+    }
+    port-xc {
+        pxc 1 {
+            admin-state enable
+            port-id 1/1/m1/1
+        }
+        pxc 2 {
+            admin-state enable
+            port-id 1/1/m1/1
+        }
+        pxc 3 {
+            admin-state enable
+            port-id 1/1/m1/1
+        }
+    }
+    router "Base" {
+        autonomous-system 64500
+        bfd {
+            seamless-bfd {
+                peer 192.0.2.6 {
+                    discriminator 524288
+                }
+            }
+        }
+        interface "system" {
+            admin-state enable
+            ipv4 {
+                primary {
+                    address 192.0.2.1
+                    prefix-length 32
+                }
+            }
+        }
+        interface "to_R11" {
+            port 1/1/c2/1:10
+            ipv4 {
+                primary {
+                    address 192.168.0.1
+                    prefix-length 30
+                }
+            }
+            ipv6 {
+                address 2001:db8:33ad::1 {
+                    prefix-length 126
+                }
+            }
+            if-attribute {
+                delay {
+                    static 10000
+                }
+            }
+        }
+        interface "to_R12" {
+            port 1/1/c1/1:10
+            ipv4 {
+                primary {
+                    address 192.168.0.5
+                    prefix-length 30
+                }
+            }
+            ipv6 {
+                address 2001:db8:33ad::5 {
+                    prefix-length 126
+                }
+            }
+            if-attribute {
+                delay {
+                    static 10000
+                }
+            }
+        }
+        bgp {
+            min-route-advertisement 1
+            rapid-withdrawal true
+            sr-policy-import true
+            ebgp-default-reject-policy {
+                import false
+                export false
+            }
+            best-path-selection {
+                deterministic-med true
+                always-compare-med {
+                    med-value missing-med-zero
+                    strict-as false
+                }
+            }
+            error-handling {
+                update-fault-tolerance true
+            }
+            graceful-restart {
+                gr-notification true
+            }
+            group "IBGP-RR" {
+                peer-as 64500
+                split-horizon true
+                family {
+                    vpn-ipv4 true
+                    vpn-ipv6 true
+                    evpn true
+                    sr-policy-ipv4 true
+                }
+            }
+            neighbor "192.0.2.21" {
+                group "IBGP-RR"
+            }
+            neighbor "192.0.2.22" {
+                group "IBGP-RR"
+            }
+        }
+        isis 0 {
+            admin-state enable
+            advertise-router-capability as
+            ipv6-routing native
+            level-capability 1
+            prefix-attributes-tlv true
+            traffic-engineering true
+            area-address [49.0001]
+            loopfree-alternate {
+                remote-lfa {
+                }
+                ti-lfa {
+                }
+            }
+            flexible-algorithms {
+                admin-state enable
+                flex-algo 128 {
+                    participate true
+                    advertise "Flex-Algo-128"
+                    loopfree-alternate { }
+                    micro-loop-avoidance { }
+                }
+            }
+            traffic-engineering-options {
+                ipv6 true
+                application-link-attributes {
+                }
+            }
+            segment-routing-v6 {
+                admin-state enable
+                locator "Alg0-Locator" {
+                    level-capability 1
+                    level 1 {
+                        metric 1
+                    }
+                }
+                locator "Alg128-Locator" {
+                    level-capability 1
+                    level 1 {
+                        metric 1
+                    }
+                }
+            }
+            interface "system" {
+                admin-state enable
+                passive true
+                level-capability 1
+                flex-algo 128 {
+                }
+            }
+            interface "to_R11" {
+                admin-state enable
+                interface-type point-to-point
+                level-capability 1
+                level 1 {
+                    metric 100
+                }
+            }
+            interface "to_R12" {
+                admin-state enable
+                interface-type point-to-point
+                level-capability 1
+                level 1 {
+                    metric 100
+                }
+            }
+            level 1 {
+                wide-metrics-only true
+            }
+        }
+        pcep {
+            pcc {
+                admin-state enable
+                local-address 192.0.2.1
+                redelegation-timer 10
+                state-timer {
+                    timer 20
+                }
+                peer 192.0.2.41 {
+                    admin-state enable
+                }
+            }
+        }
+        segment-routing {
+            maintenance-policy "SR-Policy-sBFD" {
+                admin-state enable
+                bfd-liveness true
+                bfd-template "sBFD-Template"
+                mode linear
+                revert-timer 1
+            }
+            segment-routing-v6 {
+                origination-fpe [1]
+                source-address 2001:db8:4501:1::1
+                locator "Alg0-Locator" {
+                    admin-state enable
+                    block-length 48
+                    termination-fpe [2]
+                    prefix {
+                        ip-prefix 2001:db8:4501:1::/64
+                    }
+                }
+                locator "Alg128-Locator" {
+                    admin-state enable
+                    block-length 48
+                    termination-fpe [2]
+                    algorithm 128
+                    prefix {
+                        ip-prefix 2001:db8:4502:1::/64
+                    }
+                }
+                base-routing-instance {
+                    locator "Alg0-Locator" {
+                        function {
+                            end 1 {
+                                srh-mode usp
+                            }
+                            end-x-auto-allocate usp protection protected { }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    routing-options {
+        flexible-algorithm-definitions {
+            flex-algo "Flex-Algo-128" {
+                admin-state enable
+                description "Flex-Algo for Delay Metric"
+                metric-type delay
+            }
+        }
+    }
+    service {
+        vprn "4" {
+            admin-state enable
+            description "Test VRF for SRv6 Flex-Algorithm"
+            customer "1"
+            autonomous-system 64500
+            segment-routing-v6 1 {
+                locator "Alg0-Locator" {
+                    function {
+                        end-dt4 {
+                        }
+                        end-dt6 {
+                        }
+                    }
+                }
+                locator "Alg128-Locator" {
+                    function {
+                        end-dt4 {
+                        }
+                        end-dt6 {
+                        }
+                    }
+                }
+            }
+            bgp-ipvpn {
+                segment-routing-v6 1 {
+                    admin-state enable
+                    route-distinguisher "64500:4"
+                    vrf-import {
+                        policy ["vrf4-import"]
+                    }
+                    vrf-export {
+                        policy ["vrf4-export"]
+                    }
+                    srv6 {
+                        instance 1
+                        default-locator "Alg128-Locator"
+                    }
+                }
+            }
+            bgp {
+                admin-state enable
+                min-route-advertisement 1
+                rapid-withdrawal true
+                ebgp-default-reject-policy {
+                    import false
+                    export false
+                }
+                group "ebgp" {
+                    admin-state enable
+                    as-override true
+                    peer-as 64514
+                    split-horizon true
+                    send-communities {
+                        extended false
+                    }
+                }
+                neighbor "192.168.4.2" {
+                    group "ebgp"
+                    family {
+                        ipv4 true
+                    }
+                    export {
+                        policy ["vrf4-ebgp-export"]
+                    }
+                }
+                neighbor "2001:db8:3001:104::2" {
+                    group "ebgp"
+                    family {
+                        ipv6 true
+                    }
+                    export {
+                        policy ["vrf4-ebgp-export"]
+                    }
+                }
+            }
+            interface "PE-to-CE" {
+                admin-state enable
+                ipv4 {
+                    primary {
+                        address 192.168.4.1
+                        prefix-length 30
+                    }
+                }
+                sap pxc-3.a:4 {
+                }
+                ipv6 {
+                    address 2001:db8:3001:104::1 {
+                        prefix-length 126
+                    }
+                }
+            }
+        }
+        vprn "VRF4-CE" {
+            admin-state enable
+            service-id 1004
+            customer "1"
+            autonomous-system 64514
+            bgp-ipvpn {
+                mpls {
+                    admin-state enable
+                    route-distinguisher "64500:1004"
+                }
+            }
+            bgp {
+                admin-state enable
+                min-route-advertisement 1
+                rapid-withdrawal true
+                ebgp-default-reject-policy {
+                    import false
+                    export false
+                }
+                group "EBGP" {
+                    admin-state enable
+                    peer-as 64500
+                    split-horizon true
+                }
+                neighbor "192.168.4.1" {
+                    group "EBGP"
+                    family {
+                        ipv4 true
+                    }
+                    export {
+                        policy ["vrf1004-ebgp-export"]
+                    }
+                }
+                neighbor "2001:db8:3001:104::1" {
+                    group "EBGP"
+                    family {
+                        ipv6 true
+                    }
+                    export {
+                        policy ["vrf1004-ebgp-export-ipv6"]
+                    }
+                }
+            }
+            interface "CE-to-PE" {
+                admin-state enable
+                ipv4 {
+                    primary {
+                        address 192.168.4.2
+                        prefix-length 30
+                    }
+                }
+                sap pxc-3.b:4 {
+                }
+                ipv6 {
+                    address 2001:db8:3001:104::2 {
+                        prefix-length 126
+                    }
+                }
+            }
+            interface "LAN" {
+                admin-state enable
+                ipv4 {
+                    primary {
+                        address 10.1.4.1
+                        prefix-length 24
+                    }
+                }
+                sap 1/1/c3/1:4 {
+                }
+                ipv6 {
+                    address 2001:db8:1:400::1 {
+                        prefix-length 56
+                    }
+                }
+            }
+        }
+    }
+    system {
+        name "R1"
+        dns {
+            address-pref ipv4-only
+        }
+        grpc {
+            admin-state enable
+            allow-unsecure-connection
+            gnmi {
+                auto-config-save true
+            }
+            rib-api {
+                admin-state enable
+            }
+        }
+        management-interface {
+            configuration-mode model-driven
+            cli {
+                md-cli {
+                    auto-config-save true
+                }
+            }
+            netconf {
+                admin-state enable
+                auto-config-save false
+                capabilities {
+                    writable-running false
+                }
+            }
+            yang-modules {
+                base-r13-modules false
+                nokia-submodules false
+                openconfig-modules true
+                nokia-combined-modules true
+            }
+            snmp {
+                admin-state enable
+                packet-size 9216
+                streaming {
+                    admin-state enable
+                }
+            }
+        }
+        lldp {
+            admin-state enable
+            tx-interval 5
+            tx-hold-multiplier 2
+        }
+        bluetooth {
+            advertising-timeout 30
+        }
+        login-control {
+            idle-timeout 1440
+            ssh {
+                inbound-max-sessions 30
+            }
+        }
+        security {
+            aaa {
+                local-profiles {
+                    profile "administrative" {
+                        default-action permit-all
+                        entry 10 {
+                            match "configure system security"
+                            action permit
+                        }
+                        entry 20 {
+                            match "show system security"
+                            action permit
+                        }
+                        entry 30 {
+                            match "tools perform security"
+                            action permit
+                        }
+                        entry 40 {
+                            match "tools dump security"
+                            action permit
+                        }
+                        entry 50 {
+                            match "admin system security"
+                            action permit
+                        }
+                        entry 100 {
+                            match "configure li"
+                            action deny
+                        }
+                        entry 110 {
+                            match "show li"
+                            action deny
+                        }
+                        entry 111 {
+                            match "clear li"
+                            action deny
+                        }
+                        entry 112 {
+                            match "tools dump li"
+                            action deny
+                        }
+                        netconf {
+                            base-op-authorization {
+                                action true
+                                cancel-commit true
+                                close-session true
+                                commit true
+                                copy-config true
+                                create-subscription true
+                                delete-config true
+                                discard-changes true
+                                edit-config true
+                                get true
+                                get-config true
+                                get-data true
+                                get-schema true
+                                kill-session true
+                                lock true
+                                validate true
+                            }
+                        }
+                    }
+                    profile "default" {
+                        entry 10 {
+                            match "exec"
+                            action permit
+                        }
+                        entry 20 {
+                            match "exit"
+                            action permit
+                        }
+                        entry 30 {
+                            match "help"
+                            action permit
+                        }
+                        entry 40 {
+                            match "logout"
+                            action permit
+                        }
+                        entry 50 {
+                            match "password"
+                            action permit
+                        }
+                        entry 60 {
+                            match "show config"
+                            action deny
+                        }
+                        entry 65 {
+                            match "show li"
+                            action deny
+                        }
+                        entry 66 {
+                            match "clear li"
+                            action deny
+                        }
+                        entry 67 {
+                            match "tools dump li"
+                            action deny
+                        }
+                        entry 68 {
+                            match "state li"
+                            action deny
+                        }
+                        entry 70 {
+                            match "show"
+                            action permit
+                        }
+                        entry 75 {
+                            match "state"
+                            action permit
+                        }
+                        entry 80 {
+                            match "enable-admin"
+                            action permit
+                        }
+                        entry 90 {
+                            match "enable"
+                            action permit
+                        }
+                        entry 100 {
+                            match "configure li"
+                            action deny
+                        }
+                    }
+                }
+            }
+            snmp {
+                community "cV3ISTw2V5pbEWmVEA9jXgB/1EERXQA=" hash2 {
+                    access-permissions rwa
+                    version v2c
+                }
+            }
+            ssh {
+                preserve-key true
+                server-cipher-list-v1 {
+                    cipher 200 {
+                        name 3des
+                    }
+                    cipher 205 {
+                        name blowfish
+                    }
+                }
+                server-cipher-list-v2 {
+                    cipher 190 {
+                        name aes256-ctr
+                    }
+                    cipher 192 {
+                        name aes192-ctr
+                    }
+                    cipher 194 {
+                        name aes128-ctr
+                    }
+                    cipher 200 {
+                        name aes128-cbc
+                    }
+                    cipher 205 {
+                        name 3des-cbc
+                    }
+                    cipher 210 {
+                        name blowfish-cbc
+                    }
+                    cipher 215 {
+                        name cast128-cbc
+                    }
+                    cipher 220 {
+                        name arcfour
+                    }
+                    cipher 225 {
+                        name aes192-cbc
+                    }
+                    cipher 230 {
+                        name aes256-cbc
+                    }
+                    cipher 235 {
+                        name rijndael-cbc
+                    }
+                }
+                client-cipher-list-v1 {
+                    cipher 200 {
+                        name 3des
+                    }
+                    cipher 205 {
+                        name blowfish
+                    }
+                    cipher 210 {
+                        name des
+                    }
+                }
+                client-cipher-list-v2 {
+                    cipher 190 {
+                        name aes256-ctr
+                    }
+                    cipher 192 {
+                        name aes192-ctr
+                    }
+                    cipher 194 {
+                        name aes128-ctr
+                    }
+                    cipher 200 {
+                        name aes128-cbc
+                    }
+                    cipher 205 {
+                        name 3des-cbc
+                    }
+                    cipher 210 {
+                        name blowfish-cbc
+                    }
+                    cipher 215 {
+                        name cast128-cbc
+                    }
+                    cipher 220 {
+                        name arcfour
+                    }
+                    cipher 225 {
+                        name aes192-cbc
+                    }
+                    cipher 230 {
+                        name aes256-cbc
+                    }
+                    cipher 235 {
+                        name rijndael-cbc
+                    }
+                }
+                server-mac-list-v2 {
+                    mac 200 {
+                        name hmac-sha2-512
+                    }
+                    mac 210 {
+                        name hmac-sha2-256
+                    }
+                    mac 215 {
+                        name hmac-sha1
+                    }
+                    mac 220 {
+                        name hmac-sha1-96
+                    }
+                    mac 225 {
+                        name hmac-md5
+                    }
+                    mac 230 {
+                        name hmac-ripemd160
+                    }
+                    mac 235 {
+                        name hmac-ripemd160-openssh-com
+                    }
+                    mac 240 {
+                        name hmac-md5-96
+                    }
+                }
+                client-mac-list-v2 {
+                    mac 200 {
+                        name hmac-sha2-512
+                    }
+                    mac 210 {
+                        name hmac-sha2-256
+                    }
+                    mac 215 {
+                        name hmac-sha1
+                    }
+                    mac 220 {
+                        name hmac-sha1-96
+                    }
+                    mac 225 {
+                        name hmac-md5
+                    }
+                    mac 230 {
+                        name hmac-ripemd160
+                    }
+                    mac 235 {
+                        name hmac-ripemd160-openssh-com
+                    }
+                    mac 240 {
+                        name hmac-md5-96
+                    }
+                }
+            }
+            user-params {
+                local-user {
+                    user "admin" {
+                        password "$2y$10$TQrZlpBDra86.qoexZUzQeBXDY1FcdDhGWdD9lLxMuFyPVSm0OGy6"
+                        access {
+                            console true
+                            ftp true
+                            snmp true
+                            netconf true
+                            grpc true
+                        }
+                        console {
+                            member ["administrative"]
+                        }
+                    }
+                    user "vrnetlab" {
+                        password "$2y$10$5B6h4gU8D6HuKgmg5WuLQ.GCV8izt67QBbNm6Hpue4IAauG/k4sKK"
+                        access {
+                            console true
+                            netconf true
+                        }
+                        console {
+                            member ["administrative" "default"]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+persistent-indices {
+    description "Persistent indices are maintained by the system and must not be modified."
+    vrtr-id {
+        router-name "4" vrtr-id 9
+        router-name "VRF4-CE" vrtr-id 6
+    }
+    vrtr-if-id {
+        router-name "4" interface-name "PE-to-CE" vrtr-id 9 if-index 15
+        router-name "Base" interface-name "to_R11" vrtr-id 1 if-index 2
+        router-name "Base" interface-name "to_R12" vrtr-id 1 if-index 3
+        router-name "VRF4-CE" interface-name "CE-to-PE" vrtr-id 6 if-index 11
+        router-name "VRF4-CE" interface-name "LAN" vrtr-id 6 if-index 12
+    }
+    mpls-lsp-index {
+        lsp-name "PCC_R1_R6_dis_symm" type 10 lsp-index 65537
+        lsp-name "R1-to-R6-SRTE-001" type 10 lsp-index 65536
+    }
+    mpls-path-index {
+        router-id 1 path-name "empty" path-index 1
+        router-id 1 path-name "pri" path-index 2
+        router-id 1 path-name "sec" path-index 3
+    }
+    chassis-mac {
+        client pxc index 0 pool 1 offset 1
+        client pxc index 1 pool 1 offset 2
+        client pxc index 2 pool 1 offset 3
+        client pxc index 3 pool 1 offset 4
+        client pxc index 4 pool 1 offset 5
+        client pxc index 5 pool 1 offset 6
+    }
+    log-name-id {
+        log-name "66" log-id 66 context 1 vrtr-id 1
+        log-name "96" log-id 96 context 1 vrtr-id 1
+        log-name "97" log-id 97 context 1 vrtr-id 1
+    }
+    log-filter-entry-name-id {
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "1" log-filter-entry-id 1 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "10" log-filter-entry-id 10 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "11" log-filter-entry-id 11 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "19" log-filter-entry-id 12 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "2" log-filter-entry-id 2 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "20" log-filter-entry-id 13 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "21" log-filter-entry-id 14 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "22" log-filter-entry-id 15 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "3" log-filter-entry-id 3 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "34" log-filter-entry-id 16 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "4" log-filter-entry-id 4 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "5" log-filter-entry-id 5 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "6" log-filter-entry-id 6 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "7" log-filter-entry-id 7 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "8" log-filter-entry-id 8 context 1 vrtr-id 1
+        log-filter-name "1500" log-filter-id 1500 log-filter-entry-name "9" log-filter-entry-id 9 context 1 vrtr-id 1
+    }
+    log-filter-name-id {
+        log-filter-name "1500" log-filter-id 1500 context 1 vrtr-id 1
+    }
+}
+
+# Finished 2022-12-12T22:42:30.1Z
