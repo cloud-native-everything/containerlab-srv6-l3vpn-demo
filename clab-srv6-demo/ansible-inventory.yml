@@ -6,12 +6,6 @@ all:
           ansible_host: 
         clab-srv6-demo-R3-R5:
           ansible_host: 
-        clab-srv6-demo-VPN-BR1-R1:
-          ansible_host: 
-        clab-srv6-demo-VPN-BR6-R6:
-          ansible_host: 
-        clab-srv6-demo-VSR-NRC:
-          ansible_host: 
     linux:
       hosts:
         clab-srv6-demo-destination1:

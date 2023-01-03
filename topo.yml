@@ -121,17 +121,7 @@ topology:
       image: alpine:latest  
 
 # bridge to VSR-NRC
-    VSR-NRC:
-      kind: bridge
   
-  # bridge for VPN access to R1
-    VPN-BR1-R1:
-      kind: bridge
-
-  # bridge for VPN access to R6
-    VPN-BR6-R6:
-      kind: bridge
-
   # bridge for TWAMP-LINK-R2-R4
     R2-R4:
       kind: bridge
@@ -141,14 +131,13 @@ topology:
       kind: bridge
 
   links:
-  # VSR-NRC links:
-    - endpoints: ["VSR-NRC:veth2", "R2:eth4"]
-    - endpoints: ["VSR-NRC:veth3", "R4:eth4"]
+  # R2-R4 links:
+    - endpoints: ["R4:eth4", "R2:eth4"]
 
-  # VPN-BR1_R1 links:
+  #  origin1 links:
     - endpoints: ["origin1:e1", "R1:eth3"]
   
-  # VPN-BR6_R6 links:
+  # destination1 links:
     - endpoints: ["destination1:e1", "R6:eth3"]
     
     # Area 1 connections
